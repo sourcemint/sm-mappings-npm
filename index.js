@@ -3,6 +3,9 @@ const PATH = require("path");
 const FS = require("fs");
 
 exports.for = function(packagePath) {
+    if (!packagePath) {
+        throw new Error("'packagePath' must be set");
+    }
     return new Mappings(packagePath);
 }
 
@@ -19,7 +22,7 @@ Mappings.prototype.resolve = function(uri, silent) {
 
         // If no `.` found in last segment of `uri` we assume it is a module
         // in which case we splice in `libDir` if applicable.
-        if (uriParts[uriParts.length-1].indexOf(".") === -1) {
+        if (uriParts.length > 0 && uriParts[uriParts.length-1].indexOf(".") === -1) {
 
             // TODO: Use `sm-pinf-js` to load descriptor.
             var descriptorPath = PATH.join(path, "package.json");
