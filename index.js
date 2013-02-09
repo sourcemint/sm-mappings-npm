@@ -28,7 +28,7 @@ Mappings.prototype.resolve = function(uri, silent) {
             var descriptorPath = PATH.join(path, "package.json");
             var descriptor = null;
             try {
-                if (PATH.existsSync(descriptorPath)) {
+                if ((FS.existsSync || PATH.existsSync)(descriptorPath)) {
                     descriptor = JSON.parse(FS.readFileSync(descriptorPath));
                 }
             } catch(err) {
@@ -43,7 +43,7 @@ Mappings.prototype.resolve = function(uri, silent) {
 
             modulePath = PATH.join(path, libDir, uriParts.join("/")).replace(/\.js$/, "") + ".js";
 
-            if (!PATH.existsSync(modulePath)) modulePath = false;
+            if (!(FS.existsSync || PATH.existsSync)(modulePath)) modulePath = false;
         }
         if (!modulePath) {
             modulePath = PATH.join(path, uriParts.join("/"));
@@ -62,11 +62,11 @@ Mappings.prototype.resolve = function(uri, silent) {
 
 function walkPackagesForName(packagePath, name) {
     var path = PATH.join(packagePath, "mapped_packages", name);
-    if (PATH.existsSync(path)) {
+    if ((FS.existsSync || PATH.existsSync)(path)) {
         return path;
     }
     path = PATH.join(packagePath, "node_modules", name);
-    if (PATH.existsSync(path)) {
+    if ((FS.existsSync || PATH.existsSync)(path)) {
         return path;
     }
     var nextPath = PATH.join(packagePath, "..");
